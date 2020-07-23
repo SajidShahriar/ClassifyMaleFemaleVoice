@@ -1,4 +1,4 @@
-import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
+import pandas as pd 
 from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
 from sklearn import naive_bayes
@@ -15,17 +15,32 @@ y_train = train["label"]
 x_test = test.iloc[:, :-1]
 y_test = test["label"]
 
-x_train3 = train[["meanfun","IQR","Q25"]]
-y_train3 = train["label"]
-x_test3 = test[["meanfun","IQR","Q25"]]
-y_test3 = test["label"]
+classifiers = [
+    KNeighborsClassifier(3),
+    SVC(probability=True),
+    DecisionTreeClassifier(),
+    RandomForestClassifier(),
+	AdaBoostClassifier(),
+    GradientBoostingClassifier(),
+    GaussianNB(),
+    LinearDiscriminantAnalysis(),
+    QuadraticDiscriminantAnalysis(),
+    LogisticRegression()]
+
+dt_cols = ["Classifier","Accuracy"]
+dt= pd.DataFrame(columns=dt_cols)
 
 def classify(model,x_train,y_train,x_test,y_test):
-    from sklearn.metrics import classification_report
-    target_names = ['female', 'male']
     model.fit(x_train,y_train)
     y_pred=model.predict(x_test)
-    print(classification_report(y_test, y_pred, target_names=target_names, digits=2))
+    acc= accuracy_score(y_test, y_pred)*100
+    dt_entry = pd.DataFrame([[model.__class__.__name__,acc]], columns=dt_cols)
+    return dt_entry
 
-model=naive_bayes.GaussianNB()
-classify(model,x_train,y_train,x_test,y_test)
+for clf in classifiers:
+    dt= dt.append(classify(clf,x_train,y_train,x_test,y_test))
+
+plt.figure(figsize=(5,5))
+sns.barplot(x='Accuracy', y='Classifier', data=dt)
+
+
