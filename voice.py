@@ -22,10 +22,6 @@ voice["label"] = le.fit_transform(voice["label"])
 
 voice[:]=preprocessing.MinMaxScaler().fit_transform(voice)
 train, test = train_test_split(voice, test_size=0.3)
-x_train = train.iloc[:, :-1]
-y_train = train["label"]
-x_test = test.iloc[:, :-1]
-y_test = test["label"]
 
 x_train3 = train[["meanfun","IQR","Q25"]]
 y_train3 = train["label"]
