@@ -15,11 +15,6 @@ y_train = train["label"]
 x_test = test.iloc[:, :-1]
 y_test = test["label"]
 
-x_train3 = train[["meanfun","IQR","Q25"]]
-y_train3 = train["label"]
-x_test3 = test[["meanfun","IQR","Q25"]]
-y_test3 = test["label"]
-
 def classify(model,x_train,y_train,x_test,y_test):
     from sklearn.metrics import classification_report
     target_names = ['female', 'male']
